@@ -1,10 +1,15 @@
-from django.urls import path, include
-from rest_framework.routers import DefaultRouter
-from .views import TodoViewSet
+from django.urls import path
 
-router = DefaultRouter()
-router.register("todos", TodoViewSet, basename="todo")
+from todo_backend.views.all_todos import AllTodosView
+from todo_backend.views.create_todo import CreateTodoView
+from todo_backend.views.delete_todo import DeleteTodoView
+from todo_backend.views.toggle_todo import ToggleTodoCompletionView
+from todo_backend.views.update_todo import UpdateTodoView
 
 urlpatterns = [
-    path("", include(router.urls)),
+    path("dashboard", AllTodosView.as_view(), name="all_todos"),
+    path("create", CreateTodoView.as_view(), name="all_todos"),
+    path("delete", DeleteTodoView.as_view(), name="all_todos"),
+    path("update", UpdateTodoView.as_view(), name="all_todos"),
+    path("toggle", ToggleTodoCompletionView.as_view(), name="all_todos"),
 ]
