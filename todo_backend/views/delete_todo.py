@@ -6,6 +6,7 @@ from authentication.services.handlers.exeption_handler_decorator import (
     handle_exceptions,
 )
 from authentication.services.handlers.logged_in_handler import is_logged_in
+from todo.export_types.export_todo import ExportTodo
 from todo.models import Todo
 
 
@@ -21,10 +22,13 @@ class DeleteTodoView(APIView):
         todo = Todo.objects.get(id=todo_id)
         if str(todo.user.id) != request.user.id:
             raise PermissionError("You do not have permission to delete this todo.")
+        export_todo = ExportTodo(**todo.model_to_dict())
         todo.delete()
+
         return Response(
             data={
                 "message": "Todo deleted successfully.",
+                "data": export_todo.model_dump(),
             },
             status=200,
             content_type="application/json",
