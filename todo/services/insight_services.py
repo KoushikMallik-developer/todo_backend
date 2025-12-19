@@ -38,7 +38,18 @@ class InsightServices:
             .order_by("-cnt")
             .first()
         )
-        return todo["hour"] if todo else None
+        return (
+            InsightServices.convert_hour_to_time_format(todo["hour"]) if todo else None
+        )
+
+    @staticmethod
+    def convert_hour_to_time_format(hour):
+        if hour is None:
+            return None
+        suffix = "AM" if hour < 12 else "PM"
+        hour = hour % 12
+        hour = 12 if hour == 0 else hour
+        return f"{hour} {suffix}"
 
     @staticmethod
     def get_average_daily_completion(user_id):

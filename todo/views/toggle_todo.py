@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -23,6 +25,7 @@ class ToggleTodoCompletionView(APIView):
         if str(todo.user.id) != request.user.id:
             raise PermissionError("You do not have permission to delete this todo.")
         todo.completed = not todo.completed
+        todo.completed_at = None if not todo.completed else datetime.now()
         todo.save()
         export_todo = ExportTodo(**todo.model_to_dict())
         return Response(

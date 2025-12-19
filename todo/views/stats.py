@@ -29,7 +29,7 @@ class StatsTodosView(APIView):
         stats = {
             "total_todos_count": total_todos_count,
             "completed_todos_count": completed_todos_count,
-            "completion_rate": completion_rate,
+            "completion_rate": f"{completion_rate:.2f}",
             "average_completion_per_day": InsightServices().get_average_daily_completion(
                 request.user.id
             ),
