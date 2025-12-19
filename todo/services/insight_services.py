@@ -1,5 +1,8 @@
+from datetime import timedelta
+
 from django.db.models import Count, Q, F
 from django.db.models.functions import TruncDate, ExtractHour
+from django.utils.timezone import now
 
 from todo.models import Todo
 
@@ -55,3 +58,28 @@ class InsightServices:
         active_days = len(daily_counts)
 
         return round(total_completed / active_days, 2)
+
+    @staticmethod
+    def get_total_todos_completed_this_month(user):
+        today = now()
+        month_start = today.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+
+        return Todo.objects.filter(
+            user=user,
+            completed=True,
+            completed_at__gte=month_start,
+            completed_at__lte=today,
+        ).count()
+
+    @staticmethod
+    def get_total_todos_completed_this_week(user):
+        today = now()
+        week_start = today - timedelta(days=today.weekday())
+        week_start = week_start.replace(hour=0, minute=0, second=0, microsecond=0)
+
+        return Todo.objects.filter(
+            user=user,
+            completed=True,
+            completed_at__gte=week_start,
+            completed_at__lte=today,
+        ).count()

@@ -19,10 +19,13 @@ class InsightsTodosView(APIView):
             "last_fully_completed_todo_date": InsightServices.get_last_fully_completed_todo_date(
                 request.user.id
             ),
-            "average_completion_per_day": InsightServices.get_average_daily_completion(
+            "overall_peak_completion_hour": InsightServices.get_overall_peak_completion_hour(
                 request.user.id
             ),
-            "overall_peak_completion_hour": InsightServices.get_overall_peak_completion_hour(
+            "total_todos_completed_this_month": InsightServices.get_total_todos_completed_this_month(
+                request.user.id
+            ),
+            "total_todos_completed_this_week": InsightServices.get_total_todos_completed_this_week(
                 request.user.id
             ),
         }

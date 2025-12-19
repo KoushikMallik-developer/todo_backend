@@ -1,5 +1,3 @@
-from datetime import date
-
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -9,6 +7,7 @@ from authentication.services.handlers.exeption_handler_decorator import (
 )
 from authentication.services.handlers.logged_in_handler import is_logged_in
 from todo.models import Todo
+from todo.services.insight_services import InsightServices
 
 
 class StatsTodosView(APIView):
@@ -26,17 +25,14 @@ class StatsTodosView(APIView):
             if total_todos_count > 0
             else 0
         )
-        average_completion_per_day = (
-            total_todos_count / (date.today() - request.user.created_at.date()).days
-            if request.user.created_at.date() < date.today()
-            else 0
-        )
 
         stats = {
             "total_todos_count": total_todos_count,
             "completed_todos_count": completed_todos_count,
             "completion_rate": completion_rate,
-            "average_completion_per_day": average_completion_per_day,
+            "average_completion_per_day": InsightServices().get_average_daily_completion(
+                request.user.id
+            ),
         }
         return Response(
             data={
