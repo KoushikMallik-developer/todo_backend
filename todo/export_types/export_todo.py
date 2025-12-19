@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Optional
 from uuid import UUID
 
@@ -9,6 +10,9 @@ class ExportTodo(BaseModel):
     title: str
     user: Optional[UUID]
     completed: bool
+    completed_at: Optional[datetime]
+    created_at: Optional[datetime]
+    updated_at: Optional[datetime]
 
     def __init__(self, **kwargs):
         if kwargs.get("user") and hasattr(kwargs["user"], "username"):

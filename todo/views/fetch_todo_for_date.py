@@ -6,17 +6,22 @@ from authentication.services.handlers.exeption_handler_decorator import (
     handle_exceptions,
 )
 from authentication.services.handlers.logged_in_handler import is_logged_in
+from authentication.services.helpers import string_to_datetime
 from todo.export_types.export_todo import ExportTodoList, ExportTodo
 from todo.models import Todo
 
 
-class AllTodosView(APIView):
+class FetchTodosForDateView(APIView):
     renderer_classes = [JSONRenderer]
 
     @handle_exceptions
     @is_logged_in
     def get(self, request):
-        todos = Todo.objects.filter(user__id=request.user.id)
+        todo_date = request.data.get("todo_date")
+        if not todo_date:
+            raise ValueError("Date is required.")
+        day = string_to_datetime(todo_date).date()
+        todos = Todo.objects.filter(user__id=request.user.id, created_at__date=day)
         export_todos_list: ExportTodoList = ExportTodoList(
             todos=[ExportTodo(**todo.model_to_dict()) for todo in todos]
         )
