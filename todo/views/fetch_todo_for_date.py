@@ -16,7 +16,7 @@ class FetchTodosForDateView(APIView):
 
     @handle_exceptions
     @is_logged_in
-    def get(self, request):
+    def post(self, request):
         todo_date = request.data.get("todo_date")
         if not todo_date:
             raise ValueError("Date is required.")
@@ -29,7 +29,9 @@ class FetchTodosForDateView(APIView):
         return Response(
             data={
                 "message": "Todos fetched successfully.",
-                "data": todos,
+                "data": {
+                    str(day): todos,
+                },
             },
             status=200,
             content_type="application/json",
