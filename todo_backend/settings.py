@@ -133,7 +133,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # CORS – frontend dev server
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",
+    "https://tasky-india.vercel.app/",
 ]
 # for quick dev:
 CORS_ALLOW_CREDENTIALS = True
