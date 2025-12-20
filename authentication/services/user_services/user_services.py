@@ -7,7 +7,6 @@ from dotenv import load_dotenv
 from psycopg2 import DatabaseError
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from authentication import executor
 from authentication.auth_exceptions.user_exceptions import (
     UserNotAuthenticatedError,
     UserNotFoundError,
@@ -125,7 +124,7 @@ class UserServices:
     def create_new_user_service(request_data: CreateUserRequestType) -> dict:
         user: User = UserSerializer().create(data=request_data.model_dump())
         if user:
-            executor.submit(OTPServices().send_otp_to_user, user.email)
+            OTPServices().send_otp_to_user(user.email)
             return {
                 "successMessage": DEFAULT_VERIFICATION_MESSAGE,
                 "errorMessage": None,
@@ -139,9 +138,8 @@ class UserServices:
     def reset_password(self, email: str) -> dict:
         if validate_user_email(email=email).is_validated:
             reset_url = self.generate_reset_password_url(email=email)
-            executor.submit(
-                EmailServices.send_password_reset_email_by_user_email, email, reset_url
-            )
+            EmailServices().send_password_reset_email_by_user_email(email, reset_url)
+
             return {
                 "successMessage": "Password reset email sent successfully.",
                 "errorMessage": None,

@@ -23,7 +23,5 @@ class EmailServices:
         )
         email_message: EmailMessage = EmailMessage(**email.model_dump())
         email_message.content_subtype = "html"
-        print(email_message)
         email_message.send()
-        print(email_message.send())
         return "OK"
