@@ -165,6 +165,7 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
 EMAIL_FAIL_SILENTLY = False
+EMAIL_TIMEOUT = 10  # seconds
 
 CACHES = {
     "default": {

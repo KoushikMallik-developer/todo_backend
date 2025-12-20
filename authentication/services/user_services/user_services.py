@@ -1,4 +1,5 @@
 import os
+from threading import Thread
 from typing import Optional
 
 from django.core.exceptions import ObjectDoesNotExist
@@ -124,7 +125,7 @@ class UserServices:
     def create_new_user_service(request_data: CreateUserRequestType) -> dict:
         user: User = UserSerializer().create(data=request_data.model_dump())
         if user:
-            OTPServices().send_otp_to_user(user.email)
+            Thread(target=OTPServices().send_otp_to_user, args=(user.email,)).start()
             return {
                 "successMessage": DEFAULT_VERIFICATION_MESSAGE,
                 "errorMessage": None,
@@ -138,7 +139,10 @@ class UserServices:
     def reset_password(self, email: str) -> dict:
         if validate_user_email(email=email).is_validated:
             reset_url = self.generate_reset_password_url(email=email)
-            EmailServices().send_password_reset_email_by_user_email(email, reset_url)
+            Thread(
+                target=EmailServices().send_password_reset_email_by_user_email,
+                args=(email, reset_url),
+            ).start()
 
             return {
                 "successMessage": "Password reset email sent successfully.",
